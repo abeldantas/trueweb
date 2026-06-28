@@ -1,0 +1,238 @@
+/* TrueWeb content styles. All class names are namespaced to avoid host clashes. */
+
+.tw-hud {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 2147483646;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: #15171c;
+  color: #e8e6e1;
+  font: 12px/1.2 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  border: 1px solid #2a2d34;
+  user-select: none;
+}
+
+/* Light theme for the widget (off-white bg, off-black text) */
+.tw-theme-light .tw-hud {
+  background: #f4f1ea;
+  color: #1f1e1c;
+  border-color: #ddd6c8;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+}
+.tw-theme-light .tw-hud button {
+  background: #e9e4d8;
+  color: #1f1e1c;
+  border-color: #d6cfbe;
+}
+.tw-theme-light .tw-hud button:hover { background: #e0dac9; }
+/* Light theme also lightens the sober video card (Shorts stay stark by design) */
+.tw-theme-light .tw-thumbcard:not(.tw-thumbcard--short) {
+  background: #f4f1ea;
+  color: #2a2a28;
+}
+.tw-theme-light .tw-thumbcard:not(.tw-thumbcard--short) .tw-thumbcard__chip { color: #8a7a5c; }
+.tw-theme-light .tw-thumbcard:not(.tw-thumbcard--short) .tw-thumbcard__hint { color: #8a857a; }
+
+.tw-hud__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #555;
+}
+.tw-hud[data-mode="on"] .tw-hud__dot { background: #6fae6f; }
+
+.tw-hud__label { min-width: 64px; letter-spacing: 0.02em; }
+
+.tw-hud button {
+  all: unset;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: #23262d;
+  color: #e8e6e1;
+  border: 1px solid #2f333b;
+}
+.tw-hud button:hover { background: #2c3038; }
+.tw-hud button:disabled { opacity: 0.5; cursor: default; }
+
+/* In-place title replacement: our element rendered beside the hidden original */
+.tw-title {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+/* Decoded and undecoded titles render identically (uniform feed). The
+   thumbnail card is what signals TrueWeb; the title stays the site's style. */
+
+/* Pending state while an item is being decoded by the LLM */
+.tw-decoding { animation: tw-pulse 1s ease-in-out infinite; }
+.tw-thumbcard.tw-decoding { outline: 1px dashed #59595f; outline-offset: -2px; }
+@keyframes tw-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+/* Remove profile pictures / avatars. Keyed to a class so it toggles with the
+   mode and auto-covers lazy-loaded items. The [class*="vatar"] catch-all
+   matches both "avatar" and "Avatar" across YouTube surfaces. */
+.tw-hide-avatars [class*="vatar"],
+.tw-hide-avatars #avatar,
+.tw-hide-avatars yt-img-shadow#avatar,
+.tw-hide-avatars #channel-thumbnail,
+.tw-hide-avatars a#avatar-link,
+.tw-hide-avatars ytd-channel-avatar,
+.tw-hide-avatars ytd-guide-entry-renderer yt-img-shadow,
+.tw-hide-avatars #author-thumbnail,
+.tw-hide-avatars .update-components-actor__avatar,
+.tw-hide-avatars .feed-shared-actor__avatar {
+  display: none !important;
+}
+
+/* Annotate mode */
+.tw-annotate [data-tw-baited] img,
+.tw-annotate [data-tw-baited] ytd-thumbnail,
+.tw-annotate [data-tw-baited] yt-image {
+  filter: grayscale(1) contrast(0.85) brightness(0.92);
+  opacity: 0.55;
+  transition: filter 0.15s, opacity 0.15s;
+}
+.tw-annotate [data-tw-baited]:hover img { filter: none; opacity: 1; }
+
+/* Sober thumbnail card — covers the clickbait thumbnail with plain text */
+.tw-thumbcard {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 14px;
+  box-sizing: border-box;
+  background: #1b1d22;
+  color: #ececec;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  font: 500 15px/1.35 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+.tw-thumbcard[data-score="high"] { background: #241a18; }
+.tw-thumbcard[data-score="med"] { background: #211f17; }
+.tw-thumbcard__title {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-weight: 600;
+}
+.tw-thumbcard__title.tw-honest { color: #f0d9a8; font-weight: 500; font-style: italic; }
+.tw-thumbcard__chip {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #8a887f;
+}
+.tw-thumbcard__hint {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  font-size: 10px;
+  color: #6b6962;
+}
+.tw-thumbcard:hover { background: #15171c; }
+
+/* Shorts variant: starker, blunter — "They Live" decoder vibe */
+.tw-thumbcard--short {
+  background: #000;
+  color: #e6e6e6;
+  border: 1px solid #2c2c2c;
+  font-family: "Courier New", ui-monospace, SFMono-Regular, monospace;
+  gap: 10px;
+}
+.tw-thumbcard--short:hover { background: #0a0a0a; }
+.tw-thumbcard--short .tw-thumbcard__chip {
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+}
+.tw-thumbcard--short .tw-thumbcard__title {
+  color: #d6d6d6;
+  font-weight: 600;
+  -webkit-line-clamp: 6;
+}
+.tw-thumbcard--short .tw-thumbcard__hint {
+  color: #7a7a7a;
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* Billboard / "They Live" mode: the ALL-CAPS hidden-message aesthetic.
+   Opt-in (harder to read), applied across all cards when enabled. */
+.tw-billboard .tw-thumbcard__title {
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-weight: 700;
+}
+.tw-billboard .tw-thumbcard__chip { letter-spacing: 0.3em; }
+
+.tw-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font: 11px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #f4f1ea;
+  color: #2a2a28;
+  border: 1px solid #ddd6c8;
+  max-width: 520px;
+}
+.tw-badge[data-score="high"] { background: #fbe9e4; border-color: #efc3b6; }
+.tw-badge[data-score="med"] { background: #fdf3e3; border-color: #ecd9b4; }
+.tw-badge__score { font-weight: 600; white-space: nowrap; }
+.tw-badge__honest { color: #444; font-style: italic; }
+.tw-badge__kind {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 9px;
+  font-weight: 700;
+  color: #8a7a5c;
+}
+
+/* Text-only overlay */
+.tw-reader {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483645;
+  overflow-y: auto;
+  background: #f4f1ea;
+  color: #1f1e1c;
+  padding: 48px 0 96px;
+  font: 17px/1.7 Georgia, "Times New Roman", serif;
+}
+.tw-reader__inner { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+.tw-reader h1 { font-size: 30px; line-height: 1.25; margin: 0 0 24px; }
+.tw-reader p { margin: 0 0 18px; }
+.tw-reader__meta { color: #6b6862; font-size: 13px; margin-bottom: 32px; }
+
+.tw-feedlist { list-style: none; margin: 0; padding: 0; }
+.tw-feedlist li {
+  padding: 16px 0;
+  border-bottom: 1px solid #e0dccf;
+}
+.tw-feedlist a {
+  color: #1f1e1c;
+  text-decoration: none;
+  font-size: 18px;
+}
+.tw-feedlist a:hover { text-decoration: underline; }
+.tw-feedlist .tw-feed-meta { display: block; color: #6b6862; font-size: 13px; margin-top: 4px; }
+.tw-feedlist .tw-feed-honest { display: block; color: #7a4a32; font-size: 14px; font-style: italic; margin-top: 6px; }
